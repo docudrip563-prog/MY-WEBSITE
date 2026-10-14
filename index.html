@@ -1,0 +1,530 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VYBE — Watch. Create. Grow.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#090a12;
+  --surface:#141522;
+  --surface2:#1d1e2e;
+  --purple:#8957ff;
+  --gold:#ffd166;
+  --text:#f7f7fc;
+  --muted:#a5a6bc;
+  --border:#303144;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,Arial,sans-serif}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+a{color:inherit;text-decoration:none}
+header{height:72px;position:sticky;top:0;z-index:20;background:#0d0e18ed;backdrop-filter:blur(16px);display:flex;align-items:center;justify-content:space-between;gap:15px;padding:0 5%;border-bottom:1px solid var(--border)}
+.logo{font-size:29px;font-weight:900;letter-spacing:-2px}
+.logo span{color:var(--purple)}
+.search{display:flex;background:var(--surface2);border:1px solid var(--border);border-radius:13px;overflow:hidden;max-width:470px;width:100%}
+.search input{background:none;border:0;outline:0;color:white;padding:13px;flex:1;min-width:0}
+.search button{background:var(--purple);border:0;color:white;padding:0 19px}
+.btn{border:0;border-radius:12px;padding:13px 20px;font-weight:700;background:var(--purple);color:white;transition:.2s}
+.btn:hover{filter:brightness(1.17);transform:translateY(-2px)}
+.btn.secondary{background:var(--surface2);border:1px solid var(--border)}
+.btn.gold{background:var(--gold);color:#18111d}
+.layout{display:flex;min-height:calc(100vh - 72px)}
+aside{width:225px;flex-shrink:0;border-right:1px solid var(--border);padding:23px 13px}
+.nav{display:flex;align-items:center;gap:13px;padding:15px;border-radius:12px;color:var(--muted);font-weight:600;cursor:pointer;margin-bottom:6px}
+.nav:hover,.nav.active{background:#282039;color:white}
+.nav.active{color:#b69aff}
+main{flex:1;min-width:0;padding:30px 4%}
+.hero{border-radius:24px;padding:42px;background:radial-gradient(circle at 90% 10%,#6938b780,transparent 48%),linear-gradient(120deg,#211338,#111421);border:1px solid #503b75;display:flex;justify-content:space-between;align-items:center;gap:25px}
+.hero h1{font-size:clamp(29px,4vw,48px);letter-spacing:-2px;margin:10px 0}
+.hero p{color:#d2c9e3;line-height:1.7;max-width:560px}
+.hero-art{font-size:100px;filter:drop-shadow(0 12px 30px #9e63ff80)}
+.tag{color:var(--gold);font-size:12px;font-weight:800;letter-spacing:2px}
+.section-title{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:36px 0 18px}
+.section-title h2{font-size:23px;margin:0}
+.chips{display:flex;gap:9px;overflow-x:auto;padding:24px 0 4px}
+.chip{border:1px solid var(--border);background:var(--surface);color:white;padding:10px 17px;border-radius:25px;white-space:nowrap}
+.chip.active{background:var(--purple);border-color:var(--purple)}
+.video-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:23px}
+.video-card{cursor:pointer;min-width:0}
+.thumbnail{aspect-ratio:16/9;border-radius:15px;background:linear-gradient(135deg,#392057,#101525);position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.thumbnail video{width:100%;height:100%;object-fit:cover}
+.thumb-placeholder{font-size:65px}
+.play-icon{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:#0009;border-radius:50%;padding:13px;font-size:20px}
+.video-info{display:flex;gap:12px;padding-top:13px}
+.avatar{width:39px;height:39px;border-radius:50%;background:linear-gradient(135deg,#8957ff,#ed64ae);display:grid;place-items:center;font-weight:800;flex-shrink:0}
+.video-info h3{font-size:14px;line-height:1.5;margin:0 0 6px}
+.video-info p{color:var(--muted);font-size:12px;margin:3px 0}
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:19px;padding:25px;margin:18px 0}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:15px}
+.stat{background:var(--surface2);padding:23px;border-radius:16px}
+.stat strong{font-size:27px;display:block;margin:12px 0}
+.stat small{color:var(--muted)}
+input,textarea,select{background:#202131;border:1px solid #404156;border-radius:11px;color:white;padding:14px;width:100%;outline:none}
+textarea{resize:vertical}
+.field{margin-bottom:17px}
+.field label{display:block;font-size:13px;color:#d0d0df;margin-bottom:8px;font-weight:600}
+.page{display:none}
+.page.active{display:block}
+.empty{text-align:center;padding:65px 20px;color:var(--muted);background:var(--surface);border-radius:18px}
+.empty .symbol{font-size:55px}
+.reward-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.reward{background:var(--surface2);border:1px solid var(--border);border-radius:17px;padding:25px;text-align:center}
+.reward .symbol{font-size:42px}
+.reward h3{margin-bottom:7px}
+.reward p{color:var(--muted);font-size:13px;line-height:1.6}
+.modal-backdrop{position:fixed;inset:0;background:#03030adf;backdrop-filter:blur(12px);z-index:100;display:flex;align-items:center;justify-content:center;padding:15px}
+.modal{width:min(100%,570px);max-height:94vh;overflow:auto;background:radial-gradient(circle at top,#422565,#171321 60%);border:1px solid #8057ab;border-radius:26px;padding:32px;text-align:center;position:relative;box-shadow:0 25px 100px #000a}
+.close{position:absolute;right:16px;top:15px;background:#ffffff1b;border:0;color:white;border-radius:50%;width:37px;height:37px;font-size:20px}
+.gift{font-size:95px;animation:float 3s ease-in-out infinite;margin:10px}
+@keyframes float{50%{transform:translateY(-13px) rotate(6deg)}}
+.modal h1{font-size:clamp(27px,5vw,39px);line-height:1.15;letter-spacing:-1.4px}
+.modal p{color:#c9c1d5;line-height:1.8}
+.modal-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:25px 0}
+.founder{border-top:1px solid #ffffff25;padding-top:18px;margin-top:22px;font-weight:700}
+.founder small{display:block;color:var(--muted);font-weight:400;margin-top:7px}
+footer{border-top:1px solid var(--border);text-align:center;padding:32px;color:var(--muted);font-size:13px}
+footer strong{color:white}
+.toast{position:fixed;bottom:25px;right:25px;background:#302246;border:1px solid var(--purple);border-radius:13px;padding:15px 22px;z-index:200;display:none;max-width:330px}
+.player video{width:100%;max-height:65vh;background:black;border-radius:15px}
+.player h2{margin-bottom:8px}
+.player p{color:var(--muted)}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0}
+.short-frame{max-width:370px;margin:auto;background:black;border-radius:20px;overflow:hidden;aspect-ratio:9/16;display:flex;align-items:center}
+.short-frame video{width:100%;max-height:100%}
+@media(max-width:1050px){.video-grid{grid-template-columns:repeat(2,1fr)}.stats{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:700px){
+ header{padding:0 13px;height:65px}
+ .logo{font-size:24px}
+ .search{max-width:180px}
+ .search input{padding:10px;font-size:12px}
+ .header-upload{display:none}
+ aside{position:fixed;bottom:0;left:0;right:0;width:100%;height:67px;background:#11121e;display:flex;justify-content:space-around;padding:6px;border-top:1px solid var(--border);z-index:30}
+ .nav{display:flex;flex-direction:column;gap:4px;padding:7px;font-size:10px;margin:0}
+ .nav span:first-child{font-size:20px}
+ main{padding:17px 14px 85px}
+ .hero{padding:24px}
+ .hero-art{display:none}
+ .video-grid{grid-template-columns:1fr}
+ .reward-grid{grid-template-columns:1fr}
+ .modal{padding:25px 17px}
+ .gift{font-size:70px}
+ .stats{gap:9px}
+ .stat{padding:15px}
+ .stat strong{font-size:21px}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">VY<span>BE</span><span style="color:#ffd166">.</span></div>
+  <div class="search">
+    <input id="searchInput" placeholder="Search videos..." oninput="renderVideos()">
+    <button onclick="showPage('home')">⌕</button>
+  </div>
+  <button class="btn header-upload" onclick="showPage('upload')">＋ Upload Video</button>
+  <button class="btn secondary" onclick="openAuth()">👤</button>
+</header>
+
+<div class="layout">
+<aside>
+  <div class="nav active" data-page="home" onclick="showPage('home')"><span>🏠</span> Home</div>
+  <div class="nav" data-page="shorts" onclick="showPage('shorts')"><span>▶️</span> Shorts</div>
+  <div class="nav" data-page="upload" onclick="showPage('upload')"><span>➕</span> Upload</div>
+  <div class="nav" data-page="rewards" onclick="showPage('rewards')"><span>🎁</span> Rewards</div>
+  <div class="nav" data-page="earnings" onclick="showPage('earnings')"><span>💰</span> Earnings</div>
+  <div class="nav" data-page="profile" onclick="showPage('profile')"><span>👤</span> Profile</div>
+</aside>
+
+<main>
+<section id="home" class="page active">
+  <div class="hero">
+    <div>
+      <div class="tag">✦ THE FUTURE OF CREATORS</div>
+      <h1>Your Videos.<br>Your Community.<br><span style="color:#b69aff">Your Opportunity.</span></h1>
+      <p>Discover amazing videos, share your creativity, grow your audience, and explore creator rewards.</p>
+      <div class="actions">
+        <button class="btn" onclick="showPage('upload')">🚀 Start Creating</button>
+        <button class="btn gold" onclick="openWelcome()">🎁 Invite & Win</button>
+      </div>
+    </div>
+    <div class="hero-art">🎬</div>
+  </div>
+  <div class="chips">
+    <button class="chip active" onclick="setCategory('All',this)">All</button>
+    <button class="chip" onclick="setCategory('Entertainment',this)">Entertainment</button>
+    <button class="chip" onclick="setCategory('Gaming',this)">Gaming</button>
+    <button class="chip" onclick="setCategory('Education',this)">Education</button>
+    <button class="chip" onclick="setCategory('Technology',this)">Technology</button>
+    <button class="chip" onclick="setCategory('Lifestyle',this)">Lifestyle</button>
+  </div>
+  <div class="section-title"><h2>🔥 Discover Videos</h2><span style="color:var(--muted);font-size:13px">Explore new content</span></div>
+  <div id="videoGrid" class="video-grid"></div>
+</section>
+
+<section id="shorts" class="page">
+  <div class="section-title"><h2>⚡ Short Videos</h2></div>
+  <div id="shortsContainer"></div>
+</section>
+
+<section id="upload" class="page">
+  <div class="section-title"><h2>🚀 Upload Your Video</h2></div>
+  <div class="panel" style="max-width:700px">
+    <p style="color:var(--muted)">Share your creativity with the world in a few simple steps.</p>
+    <form id="uploadForm">
+      <div class="field"><label>1. Choose Your Video</label><input id="videoFile" type="file" accept="video/*" required></div>
+      <div class="field"><label>2. Video Title</label><input id="videoTitle" placeholder="Enter an exciting video title" maxlength="120" required></div>
+      <div class="field"><label>3. Description</label><textarea id="videoDescription" rows="4" placeholder="Tell viewers about your video"></textarea></div>
+      <div class="field"><label>4. Category</label>
+        <select id="videoCategory">
+          <option>Entertainment</option><option>Gaming</option><option>Education</option><option>Technology</option><option>Lifestyle</option>
+        </select>
+      </div>
+      <div class="field"><label>5. Video Type</label>
+        <select id="videoType"><option value="video">Regular Video</option><option value="short">Short Video</option></select>
+      </div>
+      <div class="field"><label>6. Visibility</label>
+        <select id="videoVisibility"><option value="public">Public</option><option value="private">Private</option><option value="unlisted">Unlisted</option></select>
+      </div>
+      <button class="btn" type="submit">Publish Video →</button>
+      <p style="color:var(--muted);font-size:12px">Local browser demo: videos are available during this session only. Public hosting requires a backend and video storage.</p>
+    </form>
+  </div>
+</section>
+
+<section id="rewards" class="page">
+  <div class="hero">
+    <div>
+      <div class="tag">🎁 EXCLUSIVE REFERRAL PROGRAM</div>
+      <h1>Invite Friends.<br><span style="color:var(--gold)">Unlock Rewards.</span></h1>
+      <p>Share VYBE with your friends and explore exciting gifts and exclusive benefits for verified referrals.</p>
+      <button class="btn gold" onclick="copyReferral()">🔗 Copy Invite Link</button>
+    </div>
+    <div class="hero-art">🎁</div>
+  </div>
+  <div class="section-title"><h2>My Referral Dashboard</h2></div>
+  <div class="stats">
+    <div class="stat"><small>Friends Invited</small><strong>0</strong></div>
+    <div class="stat"><small>Verified Referrals</small><strong>0</strong></div>
+    <div class="stat"><small>Rewards Unlocked</small><strong>0</strong></div>
+    <div class="stat"><small>Gifts Claimed</small><strong>0</strong></div>
+  </div>
+  <div class="panel">
+    <h3>🔗 Your Referral Link</h3>
+    <p style="color:var(--muted)">Sign in to generate your personal referral link when account services are connected.</p>
+    <button class="btn" onclick="copyReferral()">Copy Referral Link</button>
+    <button class="btn secondary" onclick="shareReferral()">Share on WhatsApp</button>
+  </div>
+  <div class="section-title"><h2>🎁 Explore Gift Categories</h2></div>
+  <div class="reward-grid">
+    <div class="reward"><div class="symbol">🎟️</div><h3>Gift Vouchers</h3><p>Unlock shopping and digital vouchers through eligible referrals.</p></div>
+    <div class="reward"><div class="symbol">👑</div><h3>Premium Benefits</h3><p>Access special creator features and exclusive membership benefits.</p></div>
+    <div class="reward"><div class="symbol">🎁</div><h3>Surprise Gifts</h3><p>Explore special merchandise and promotional gifts.</p></div>
+  </div>
+  <div class="panel"><strong>Important:</strong><p style="color:var(--muted)">Rewards are subject to availability, verification, eligibility requirements, and published program terms. No reward is guaranteed merely for sharing a link.</p></div>
+</section>
+
+<section id="earnings" class="page">
+  <div class="section-title"><h2>💰 Creator Earnings</h2></div>
+  <div class="stats">
+    <div class="stat"><small>Verified Views</small><strong>0</strong></div>
+    <div class="stat"><small>Estimated Earnings</small><strong>₹0.00</strong></div>
+    <div class="stat"><small>Available Balance</small><strong>₹0.00</strong></div>
+    <div class="stat"><small>Pending Earnings</small><strong>₹0.00</strong></div>
+  </div>
+  <div class="panel">
+    <h2>✨ Creator Monetization</h2>
+    <p style="color:var(--muted);line-height:1.8">Earn through approved monetization programs once your account becomes eligible. Not every view generates revenue. Earnings depend on verified eligible views, platform policies, and available monetization programs.</p>
+    <button class="btn" onclick="toast('Monetization applications will be available after backend integration.')">Apply for Monetization</button>
+  </div>
+  <div class="panel">
+    <h3>💳 Withdraw Earnings</h3>
+    <p style="color:var(--muted)">Withdrawals through UPI and bank transfer will become available after verified payment integration and eligibility approval.</p>
+    <button class="btn secondary" onclick="toast('Withdrawals are not enabled in this demo.')">Request Withdrawal</button>
+  </div>
+</section>
+
+<section id="profile" class="page">
+  <div class="panel" style="text-align:center">
+    <div class="avatar" style="width:90px;height:90px;font-size:35px;margin:0 auto 18px">👤</div>
+    <h2>Welcome, Creator!</h2>
+    <p style="color:var(--muted)">Your creative journey starts here.</p>
+    <button class="btn" onclick="openAuth()">Sign In / Create Account</button>
+  </div>
+  <div class="section-title"><h2>My Uploaded Videos</h2></div>
+  <div id="myVideos" class="video-grid"></div>
+</section>
+
+<section id="watch" class="page">
+  <button class="btn secondary" onclick="showPage('home')">← Back to Videos</button>
+  <div class="panel player" id="playerContainer"></div>
+</section>
+
+<footer>
+  <div class="logo" style="margin-bottom:12px">VY<span>BE</span>.</div>
+  <strong>Founded by Akshay Dhanawade</strong>
+  <p>Empowering Creators. Connecting Communities. Rewarding Talent.</p>
+  <p>About Us · Contact · Privacy · Terms · Creator Rewards · Help</p>
+  <p>© <span id="year"></span> VYBE. All Rights Reserved.</p>
+</footer>
+</main>
+</div>
+
+<div id="welcomeModal" class="modal-backdrop" style="display:none">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="welcomeTitle">
+    <button class="close" onclick="closeWelcome()" aria-label="Close">×</button>
+    <div class="tag">✨ EXCLUSIVE WELCOME OFFER ✨</div>
+    <div class="gift">🎁</div>
+    <h1 id="welcomeTitle">INVITE FRIENDS.<br><span style="color:var(--gold)">UNLOCK AMAZING REWARDS!</span></h1>
+    <p>Welcome to a new era of video sharing and creator rewards! Invite your friends and family to join our growing community and explore exclusive gifts, exciting rewards, and special benefits.</p>
+    <div class="tag">CREATE • WATCH • SHARE • EARN • GET REWARDED</div>
+    <div class="modal-actions">
+      <button class="btn gold" onclick="closeWelcome();openAuth()">🚀 Join Now — It's Free</button>
+      <button class="btn" onclick="closeWelcome();showPage('rewards')">🎁 Explore Rewards</button>
+      <button class="btn secondary" onclick="closeWelcome();showPage('home')">▶ Start Watching</button>
+    </div>
+    <small style="color:var(--muted)">Gifts depend on verified referrals and eligibility rules.</small>
+    <div class="founder">Founded by Akshay Dhanawade<small>Building Opportunities. Rewarding Creativity.</small></div>
+  </div>
+</div>
+
+<div id="authModal" class="modal-backdrop" style="display:none">
+  <div class="modal" role="dialog" aria-modal="true" aria-label="Account registration">
+    <button class="close" onclick="closeAuth()">×</button>
+    <h2>Welcome to VYBE</h2>
+    <p>Join our growing creator community.</p>
+    <div class="field"><input placeholder="Full Name" id="authName" autocomplete="name"></div>
+    <div class="field"><input placeholder="Email Address" id="authEmail" type="email" autocomplete="email"></div>
+    <div class="field"><input placeholder="Password" id="authPassword" type="password" autocomplete="new-password"></div>
+    <button class="btn" style="width:100%" onclick="authNotice()">Continue</button>
+    <p style="font-size:12px">Secure account registration requires backend authentication setup. This preview does not collect or save credentials.</p>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const $ = id => document.getElementById(id);
+const videos = [];
+let currentCategory = "All";
+let currentPlayerURL = null;
+
+function toast(message){
+  const el=$("toast");
+  el.textContent=message;
+  el.style.display="block";
+  clearTimeout(window.toastTimer);
+  window.toastTimer=setTimeout(()=>el.style.display="none",3500);
+}
+
+function showPage(page){
+  document.querySelectorAll(".page").forEach(el=>el.classList.remove("active"));
+  const target=$(page);
+  if(!target)return;
+  target.classList.add("active");
+  document.querySelectorAll(".nav").forEach(el=>el.classList.toggle("active",el.dataset.page===page));
+  if(page!=="watch")stopPlayer();
+  if(page==="shorts")renderShorts();
+  if(page==="profile")renderMyVideos();
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function openWelcome(){
+  $("welcomeModal").style.display="flex";
+  document.body.style.overflow="hidden";
+}
+function closeWelcome(){
+  $("welcomeModal").style.display="none";
+  document.body.style.overflow="";
+  sessionStorage.setItem("vybeWelcomeSeen","true");
+}
+function openAuth(){
+  $("authModal").style.display="flex";
+  document.body.style.overflow="hidden";
+}
+function closeAuth(){
+  $("authModal").style.display="none";
+  document.body.style.overflow="";
+}
+function authNotice(){
+  toast("Registration is not enabled yet. Connect secure authentication first.");
+}
+function setCategory(category,button){
+  currentCategory=category;
+  document.querySelectorAll(".chip").forEach(el=>el.classList.remove("active"));
+  button.classList.add("active");
+  renderVideos();
+}
+function makeEmpty(message){
+  const div=document.createElement("div");
+  div.className="empty";
+  div.style.gridColumn="1/-1";
+  div.innerHTML='<div class="symbol">🎬</div>';
+  const p=document.createElement("p");
+  p.textContent=message;
+  div.appendChild(p);
+  return div;
+}
+function createVideoCard(video){
+  const card=document.createElement("article");
+  card.className="video-card";
+  card.tabIndex=0;
+  card.setAttribute("role","button");
+  card.onclick=()=>watchVideo(video.id);
+  card.onkeydown=e=>{if(e.key==="Enter")watchVideo(video.id)};
+  const thumb=document.createElement("div");
+  thumb.className="thumbnail";
+  const preview=document.createElement("video");
+  preview.src=video.url;
+  preview.preload="metadata";
+  preview.muted=true;
+  preview.playsInline=true;
+  thumb.appendChild(preview);
+  const play=document.createElement("div");
+  play.className="play-icon";
+  play.textContent="▶";
+  thumb.appendChild(play);
+  const info=document.createElement("div");
+  info.className="video-info";
+  const avatar=document.createElement("div");
+  avatar.className="avatar";
+  avatar.textContent="V";
+  const text=document.createElement("div");
+  const title=document.createElement("h3");
+  title.textContent=video.title;
+  const meta=document.createElement("p");
+  meta.textContent="Local Creator · New upload";
+  text.append(title,meta);
+  info.append(avatar,text);
+  card.append(thumb,info);
+  return card;
+}
+function renderVideos(){
+  const grid=$("videoGrid");
+  grid.replaceChildren();
+  const search=$("searchInput").value.toLowerCase().trim();
+  const filtered=videos.filter(v=>
+    v.visibility==="public" &&
+    v.type==="video" &&
+    (currentCategory==="All"||v.category===currentCategory) &&
+    v.title.toLowerCase().includes(search)
+  );
+  if(!filtered.length){
+    grid.appendChild(makeEmpty("No videos yet. Be the first creator to upload a video!"));
+    return;
+  }
+  filtered.forEach(v=>grid.appendChild(createVideoCard(v)));
+}
+function renderMyVideos(){
+  const grid=$("myVideos");
+  grid.replaceChildren();
+  if(!videos.length){
+    grid.appendChild(makeEmpty("You have not uploaded any videos yet."));
+    return;
+  }
+  videos.forEach(v=>grid.appendChild(createVideoCard(v)));
+}
+function renderShorts(){
+  const container=$("shortsContainer");
+  container.replaceChildren();
+  const shorts=videos.filter(v=>v.type==="short"&&v.visibility==="public");
+  if(!shorts.length){
+    container.appendChild(makeEmpty("No shorts yet. Upload your first short video!"));
+    return;
+  }
+  shorts.forEach(v=>{
+    const panel=document.createElement("div");
+    panel.className="panel";
+    panel.style.maxWidth="420px";
+    panel.style.margin="20px auto";
+    const frame=document.createElement("div");
+    frame.className="short-frame";
+    const player=document.createElement("video");
+    player.src=v.url;
+    player.controls=true;
+    player.playsInline=true;
+    player.preload="metadata";
+    frame.appendChild(player);
+    const title=document.createElement("h3");
+    title.textContent=v.title;
+    panel.append(frame,title);
+    container.appendChild(panel);
+  });
+}
+function stopPlayer(){
+  const container=$("playerContainer");
+  container.querySelectorAll("video").forEach(v=>v.pause());
+}
+function watchVideo(id){
+  const video=videos.find(v=>v.id===id);
+  if(!video)return;
+  const container=$("playerContainer");
+  container.replaceChildren();
+  const player=document.createElement("video");
+  player.src=video.url;
+  player.controls=true;
+  player.autoplay=true;
+  player.playsInline=true;
+  const title=document.createElement("h2");
+  title.textContent=video.title;
+  const description=document.createElement("p");
+  description.textContent=video.description||"No description provided.";
+  const meta=document.createElement("p");
+  meta.textContent="Category: "+video.category+" · Local preview";
+  const actions=document.createElement("div");
+  actions.className="actions";
+  const like=document.createElement("button");
+  like.className="btn secondary";
+  like.textContent="♡ Like";
+  like.onclick=()=>toast("Sign in to like videos.");
+  const share=document.createElement("button");
+  share.className="btn secondary";
+  share.textContent="↗ Share";
+  share.onclick=()=>toast("Public sharing requires a deployed video URL.");
+  actions.append(like,share);
+  container.append(player,title,meta,description,actions);
+  showPage("watch");
+}
+$("uploadForm").addEventListener("submit",e=>{
+  e.preventDefault();
+  const file=$("videoFile").files[0];
+  const title=$("videoTitle").value.trim();
+  if(!file||!file.type.startsWith("video/")){
+    toast("Please choose a valid video file.");
+    return;
+  }
+  if(!title){toast("Please enter a video title.");return;}
+  const video={
+    id:crypto.randomUUID(),
+    title,
+    description:$("videoDescription").value.trim(),
+    category:$("videoCategory").value,
+    type:$("videoType").value,
+    visibility:$("videoVisibility").value,
+    url:URL.createObjectURL(file)
+  };
+  videos.unshift(video);
+  $("uploadForm").reset();
+  renderVideos();
+  toast("Video added to your local preview!");
+  showPage("profile");
+});
+function copyReferral(){
+  toast("Referral links require registered accounts and a connected backend.");
+}
+function shareReferral(){
+  toast("Referral sharing will be enabled after account registration is connected.");
+}
+$("year").textContent=new Date().getFullYear();
+renderVideos();
+if(!sessionStorage.getItem("vybeWelcomeSeen")){
+  openWelcome();
+}
+</script>
+</body>
+</html>
